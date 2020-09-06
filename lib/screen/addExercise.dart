@@ -58,10 +58,17 @@ class _AddExerciseState extends State<AddExercise> {
   FocusNode _autorNode;
   bool _loading;
   double _progressValue;
+  get isEditExercise => widget.exercise != null;
 
+  List _cities = ["Back-End", "Front-End", "JavaScript", "Node", "CSS"];
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  String _currentCity;
   @override
   void initState() {
     super.initState();
+    _dropDownMenuItems = getDropDownMenuItems();
+    _currentCity =
+        isEditExercise ? widget.exercise.tag : _dropDownMenuItems[0].value;
     _loading = false;
     _progressValue = 0.0;
 
@@ -78,7 +85,20 @@ class _AddExerciseState extends State<AddExercise> {
     _autorNode = FocusNode();
   }
 
-  get isEditExercise => widget.exercise != null;
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String city in _cities) {
+      items.add(new DropdownMenuItem(value: city, child: new Text(city)));
+    }
+    return items;
+  }
+
+  void changedDropDownItem(String selectedCity) {
+    setState(() {
+      _currentCity = selectedCity;
+      print(_currentCity);
+    });
+  }
 
   Future getImageFromCamera() async {
     final picker = ImagePicker();
@@ -200,6 +220,32 @@ class _AddExerciseState extends State<AddExercise> {
                   labelText: "Autor da pergunta",
                   border: OutlineInputBorder(),
                 ),
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    "Selecione a TAG ",
+                  ),
+                  Container(
+                    height: 50.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    width: 220.0,
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: DropdownButton(
+                      value: _currentCity,
+                      items: _dropDownMenuItems,
+                      onChanged: changedDropDownItem,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 10.0,
@@ -337,7 +383,8 @@ class _AddExerciseState extends State<AddExercise> {
                                         resposta: _respostaController.text,
                                         autor: _autorController.text,
                                         url: myUrl,
-                                        id: widget.exercise.id);
+                                        id: widget.exercise.id,
+                                        tag: _currentCity);
 
                                     await FirestoreService()
                                         .updateExercise(exercise);
@@ -349,7 +396,8 @@ class _AddExerciseState extends State<AddExercise> {
                                         resposta: _respostaController.text,
                                         autor: _autorController.text,
                                         url: myUrl,
-                                        id: widget.exercise.id);
+                                        id: widget.exercise.id,
+                                        tag: _currentCity);
 
                                     await FirestoreService()
                                         .updateExercise(exercise);
@@ -358,12 +406,12 @@ class _AddExerciseState extends State<AddExercise> {
                                   String myUrl = await uploadImage(_image);
 
                                   Exercise exercise = Exercise(
-                                    titulo: _tituloController.text,
-                                    pergunta: _perguntaController.text,
-                                    resposta: _respostaController.text,
-                                    autor: _autorController.text,
-                                    url: myUrl,
-                                  );
+                                      titulo: _tituloController.text,
+                                      pergunta: _perguntaController.text,
+                                      resposta: _respostaController.text,
+                                      autor: _autorController.text,
+                                      url: myUrl,
+                                      tag: _currentCity);
                                   await FirestoreService()
                                       .addExercise(exercise);
                                 }

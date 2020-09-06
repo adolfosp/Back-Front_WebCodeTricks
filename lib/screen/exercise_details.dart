@@ -28,6 +28,9 @@ class ExerciseDetailsPage extends StatelessWidget {
             Text(
               exercise.autor,
             ),
+            Text(
+              exercise.tag,
+            ),
             Image.network(exercise.url),
             const SizedBox(
               height: 20.0,

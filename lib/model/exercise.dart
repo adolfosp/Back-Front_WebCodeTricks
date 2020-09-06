@@ -1,5 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
-
 class Exercise {
   final String titulo;
   final String pergunta;
@@ -7,6 +5,7 @@ class Exercise {
   final String autor;
   final String id;
   final String url;
+  final String tag;
 
   Exercise(
       {this.titulo,
@@ -14,7 +13,8 @@ class Exercise {
       this.autor,
       this.pergunta,
       this.resposta,
-      this.url});
+      this.url,
+      this.tag});
 
   Exercise.fromMap(Map<String, dynamic> data, String id)
       : titulo = data['titulo'],
@@ -22,7 +22,8 @@ class Exercise {
         pergunta = data['pergunta'],
         resposta = data['resposta'],
         autor = data['autor'],
-        url = data['url'];
+        url = data['url'],
+        tag = data['tag'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -31,6 +32,7 @@ class Exercise {
       "resposta": resposta,
       "autor": autor,
       "url": url,
+      "tag": tag,
     };
   }
 }
