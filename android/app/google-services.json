@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "564346763959",
+    "firebase_url": "https://webcodetricks.firebaseio.com",
+    "project_id": "webcodetricks",
+    "storage_bucket": "webcodetricks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564346763959:android:e4342892d9f9e09ccaeb32",
+        "android_client_info": {
+          "package_name": "com.example.webcodetricks"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564346763959-250cqlulflrvr4h9fbtpnhnicrvf2dtl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.webcodetricks",
+            "certificate_hash": "120f5c0d1add78ebf876882db44023131a9f6fd3"
+          }
+        },
+        {
+          "client_id": "564346763959-ft03sd6588i1th2gblgbnj7f26r7eiq2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRc7Hq7qae0BqDO4F9XBNtFko_NTRqzg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564346763959-ft03sd6588i1th2gblgbnj7f26r7eiq2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
