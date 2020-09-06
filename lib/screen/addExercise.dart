@@ -31,19 +31,6 @@ class _AddExerciseState extends State<AddExercise> {
     return downloadURL;
   }
 
-  Future getImageFromCamera() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    if (pickedFile?.path == null) return;
-
-    final image = File(pickedFile.path);
-
-    setState(() {
-      _image = image;
-    });
-  }
-
   Future getImageFromGallery() async {
     final picker = ImagePicker();
     final pickedFile = await picker.getImage(source: ImageSource.gallery);
@@ -92,6 +79,19 @@ class _AddExerciseState extends State<AddExercise> {
   }
 
   get isEditExercise => widget.exercise != null;
+
+  Future getImageFromCamera() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.getImage(source: ImageSource.camera);
+
+    if (pickedFile?.path == null) return;
+
+    final image = File(pickedFile.path);
+
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,26 +205,68 @@ class _AddExerciseState extends State<AddExercise> {
                 height: 10.0,
               ),
               Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[200],
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(7),
-                  boxShadow: [
-                    new BoxShadow(
-                      color: Colors.grey,
-                      offset: new Offset(0.0, 0.0),
-                    ),
-                  ],
-                ),
-                width: MediaQuery.of(context).size.width,
-                height: 200.0,
-                child: Center(
-                  child: _image == null
-                      ? Text("Nenhuma imagem selecionada")
-                      : Image.file(_image),
-                ),
+                child: isEditExercise
+                    ? Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: widget.exercise != null
+                                ? Image.network(widget.exercise.url)
+                                : Text(""),
+                          ),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[200],
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(7),
+                                boxShadow: [
+                                  new BoxShadow(
+                                    color: Colors.grey,
+                                    offset: new Offset(0.0, 0.0),
+                                  ),
+                                ],
+                              ),
+                              width: MediaQuery.of(context).size.width,
+                              height: 200.0,
+                              child: Center(
+                                child: _image != null
+                                    ? Image.file(_image)
+                                    : Text(
+                                        "Caso deseje alterar de imagem, tire outra",
+                                        textAlign: TextAlign.center,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[200],
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(7),
+                          boxShadow: [
+                            new BoxShadow(
+                              color: Colors.grey,
+                              offset: new Offset(0.0, 0.0),
+                            ),
+                          ],
+                        ),
+                        width: MediaQuery.of(context).size.width,
+                        height: 200.0,
+                        child: Center(
+                          child: _image != null
+                              ? Image.file(_image)
+                              : Text(
+                                  "Nenhuma imagem selecionada",
+                                  textAlign: TextAlign.center,
+                                ),
+                        ),
+                      ),
               ),
               const SizedBox(
                 height: 30.0,
@@ -286,15 +328,32 @@ class _AddExerciseState extends State<AddExercise> {
 
                               try {
                                 if (isEditExercise) {
-                                  Exercise exercise = Exercise(
-                                      titulo: _tituloController.text,
-                                      pergunta: _perguntaController.text,
-                                      resposta: _respostaController.text,
-                                      autor: _autorController.text,
-                                      id: widget.exercise.id);
+                                  String myUrl;
+                                  if (_image != null) {
+                                    String myUrl = await uploadImage(_image);
+                                    Exercise exercise = Exercise(
+                                        titulo: _tituloController.text,
+                                        pergunta: _perguntaController.text,
+                                        resposta: _respostaController.text,
+                                        autor: _autorController.text,
+                                        url: myUrl,
+                                        id: widget.exercise.id);
 
-                                  await FirestoreService()
-                                      .updateExercise(exercise);
+                                    await FirestoreService()
+                                        .updateExercise(exercise);
+                                  } else {
+                                    String myUrl = widget.exercise.url;
+                                    Exercise exercise = Exercise(
+                                        titulo: _tituloController.text,
+                                        pergunta: _perguntaController.text,
+                                        resposta: _respostaController.text,
+                                        autor: _autorController.text,
+                                        url: myUrl,
+                                        id: widget.exercise.id);
+
+                                    await FirestoreService()
+                                        .updateExercise(exercise);
+                                  }
                                 } else {
                                   String myUrl = await uploadImage(_image);
 
