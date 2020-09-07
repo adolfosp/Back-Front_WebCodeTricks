@@ -403,7 +403,12 @@ class _AddExerciseState extends State<AddExercise> {
                                         .updateExercise(exercise);
                                   }
                                 } else {
-                                  String myUrl = await uploadImage(_image);
+                                  String myUrl;
+                                  if (_image == null) {
+                                    myUrl = "Sem imagem";
+                                  } else {
+                                    myUrl = await uploadImage(_image);
+                                  }
 
                                   Exercise exercise = Exercise(
                                       titulo: _tituloController.text,

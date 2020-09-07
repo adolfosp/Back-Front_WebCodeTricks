@@ -22,6 +22,22 @@ class FirestoreService {
         );
   }
 
+  Stream<List<Exercise>> getExerciseWhere(String resultado) {
+    print(resultado);
+    return _db
+        .collection('exercise')
+        .where('tag', isGreaterThanOrEqualTo: resultado)
+        .where('tag', isLessThan: resultado + 'z')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.documents
+              .map(
+                (doc) => Exercise.fromMap(doc.data, doc.documentID),
+              )
+              .toList(),
+        );
+  }
+
   Future<void> addExercise(Exercise exercise) {
     return _db.collection('exercise').add(exercise.toMap());
   }
