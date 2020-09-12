@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webcodetricks/screen/addExercise.dart';
 import 'package:webcodetricks/screen/home_page.dart';
+import 'package:webcodetricks/screen/tela_dicasimg.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -54,7 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             BottomNavigationBarItem(
-                icon: Icon(Icons.person), title: Text("NULL"))
+              icon: Icon(Icons.picture_in_picture),
+              title: Text(
+                "Gallery",
+                overflow: TextOverflow.visible,
+                textAlign: TextAlign.center,
+              ),
+            ),
           ],
         ),
       ),
@@ -66,13 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _page = p;
               });
             },
-            children: <Widget>[
-              HomePageExercise(),
-              AddExercise(),
-              Container(
-                color: Colors.green,
-              ),
-            ]),
+            children: <Widget>[HomePageExercise(), AddExercise(), PageDicas()]),
       ),
     );
   }

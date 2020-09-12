@@ -71,11 +71,15 @@ class LoginPageWidgetState extends State<LoginPageWidget> {
                     height: 10,
                   ),
                   FadeAnimation(
-                      1.3,
-                      Text(
-                        "Seja Bem-vindo ",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      )),
+                    1.3,
+                    SizedBox(
+                        width: 500,
+                        child: Text(
+                          "Seja Bem-vindo ",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          textAlign: TextAlign.center,
+                        )),
+                  ),
                 ],
               ),
             ),
