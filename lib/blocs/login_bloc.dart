@@ -4,10 +4,13 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:webcodetricks/screen/login_screen.dart';
+
+
 import 'package:webcodetricks/validators/login_validators.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 enum LoginState { IDLE, LOADING, SUCCESS, FAIL }
+
 
 class LoginBloc extends BlocBase with LoginValidators {
   final _emailController = BehaviorSubject<String>();
@@ -25,6 +28,7 @@ class LoginBloc extends BlocBase with LoginValidators {
 
   Function(String) get changeEmail => _emailController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
+          
 
   StreamSubscription _streamSubscription;
 
@@ -34,9 +38,14 @@ class LoginBloc extends BlocBase with LoginValidators {
         FirebaseAuth.instance.onAuthStateChanged.listen((user) async {
       if (user != null) {
         if (await verifyPrivileges(user)) {
+          final String usuario = user.uid;
+          print("adolfo "+usuario);
+          receberID(usuario);
           _stateController.add(LoginState.SUCCESS);
+        
         } else {
           _stateController.add(LoginState.FAIL);
+          
           FirebaseAuth.instance.signOut();
         }
       } else {
@@ -82,3 +91,4 @@ class LoginBloc extends BlocBase with LoginValidators {
     _streamSubscription.cancel();
   }
 }
+

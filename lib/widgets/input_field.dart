@@ -16,13 +16,15 @@ class InputField extends StatelessWidget {
       stream: stream,
       builder: (context, snapshot) {
         return TextField(
+          
           onChanged: onChanged,
           decoration: InputDecoration(
-            icon: Icon(icon, color: Colors.white,),
-            hintText: hint,
-            hintStyle: TextStyle(color: Colors.white),
+            icon: Icon(icon,color:Colors.white,size: 40,
+),
+            hintText: hint ,
+            hintStyle: TextStyle(color: Colors.black,fontSize: 17),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.pinkAccent)
+              borderSide: BorderSide(color: Colors.black)
             ),
             contentPadding: EdgeInsets.only(
               left: 5,

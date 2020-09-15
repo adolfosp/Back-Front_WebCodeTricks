@@ -7,12 +7,13 @@ import 'package:webcodetricks/model/exercise.dart';
 import 'package:webcodetricks/model/firestore_service.dart';
 import 'package:webcodetricks/screen/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:webcodetricks/screen/login_screen.dart';
 
 class AddExercise extends StatefulWidget {
   final Exercise exercise;
 
-  AddExercise({Key key, this.exercise}) : super(key: key);
-
+  AddExercise({Key key, this.exercise, this.usuarioF}) : super(key: key);
+  String usuarioF;
   @override
   _AddExerciseState createState() => _AddExerciseState();
 }
@@ -51,7 +52,9 @@ class _AddExerciseState extends State<AddExercise> {
   TextEditingController _tituloController;
   TextEditingController _perguntaController;
   TextEditingController _respostaController;
-  TextEditingController _autorController;
+  TextEditingController _autorController ;
+ 
+
 
   FocusNode _perguntaNode;
   FocusNode _respostaNode;
@@ -66,6 +69,7 @@ class _AddExerciseState extends State<AddExercise> {
   @override
   void initState() {
     super.initState();
+
     _dropDownMenuItems = getDropDownMenuItems();
     _currentCity =
         isEditExercise ? widget.exercise.tag : _dropDownMenuItems[0].value;
@@ -79,7 +83,7 @@ class _AddExerciseState extends State<AddExercise> {
     _respostaController = TextEditingController(
         text: isEditExercise ? widget.exercise.resposta : '');
     _autorController = TextEditingController(
-        text: isEditExercise ? widget.exercise.autor : '');
+        text: isEditExercise ? widget.usuarioF : widget.usuarioF);
     _perguntaNode = FocusNode();
     _respostaNode = FocusNode();
     _autorNode = FocusNode();
@@ -118,8 +122,10 @@ class _AddExerciseState extends State<AddExercise> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title:
-            Text(widget.exercise != null ? 'Update Exercise' : 'Add Exercise'),
+        backgroundColor: Colors.grey[700],
+        title: Text(widget.exercise != null
+            ? 'Editando Exercício'
+            : 'Cadastrando Exercício'),
         actions: <Widget>[
           // action button
           IconButton(
@@ -204,10 +210,12 @@ class _AddExerciseState extends State<AddExercise> {
                 height: 10.0,
               ),
               TextFormField(
+                enabled: false,
                 textInputAction: TextInputAction.next,
                 onEditingComplete: () {
                   FocusScope.of(context).requestFocus();
                 },
+                
                 focusNode: _autorNode,
                 controller: _autorController,
                 validator: (value4) {

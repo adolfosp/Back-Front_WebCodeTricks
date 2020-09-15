@@ -5,13 +5,17 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class HomeTab extends StatelessWidget {
+  final String text;
+  HomeTab({Key key, @required this.text}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Widget _buildBodyBack() => Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(colors: [
-            Color.fromARGB(255, 211, 118, 130),
-            Color.fromARGB(255, 253, 181, 168)
+            Color.fromRGBO(38, 39, 42, 1),
+            Color.fromRGBO(49, 50, 55, 1),
+            Color.fromRGBO(71, 74, 81, 1),
           ], begin: Alignment.topLeft, end: Alignment.bottomRight)),
         );
 
@@ -26,7 +30,7 @@ class HomeTab extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0.0,
               flexibleSpace: FlexibleSpaceBar(
-                title: const Text("Novidades"),
+                title: new Text(text),
                 centerTitle: true,
               ),
             ),

@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:webcodetricks/model/firestore_service.dart';
 import 'package:webcodetricks/model/exercise.dart';
 import 'package:webcodetricks/screen/addExercise.dart';
@@ -8,7 +10,10 @@ var resultado = "";
 TextEditingController _textController = TextEditingController();
 
 class HomePageExercise extends StatefulWidget {
-  HomePageExercise({Key key}) : super(key: key);
+  HomePageExercise({Key key,}) : super(key: key);
+  
+
+
 
   @override
   _HomePageExerciseState createState() => _HomePageExerciseState();
@@ -24,25 +29,29 @@ class _HomePageExerciseState extends State<HomePageExercise> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: TextField(
-              controller: _textController,
-              style: TextStyle(color: Colors.black),
-              decoration: InputDecoration(
-                  hintText: "Pesquisar por TAG",
-                  hintStyle: TextStyle(color: Colors.black),
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.black,
-                  ),
-                  border: InputBorder.none),
-              onChanged: (value) {
-                FirestoreService().getExerciseWhere(value);
-                setState(() {
-                  resultado = value;
-                });
-              }),
+        Column(
+                  children: <Widget>[Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: TextField(
+                textCapitalization: TextCapitalization.sentences,
+                controller: _textController,
+                style: TextStyle(color: Colors.black),
+                decoration: InputDecoration(
+                    hintText: "Pesquisar por TAG",
+                    hintStyle: TextStyle(color: Colors.black),
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.black,
+                    ),
+                    border: InputBorder.none),
+                onChanged: (value) {
+                  FirestoreService().getExerciseWhere(value);
+                  setState(() {
+                    resultado = value;
+                  });
+                }),
+          ),
+          ]
         ),
         Expanded(
           child: StreamBuilder(
@@ -56,39 +65,64 @@ class _HomePageExerciseState extends State<HomePageExercise> {
                     itemBuilder: (BuildContext context, int index) {
                       Exercise exercise = snapshot.data[index];
 
-                      return Card(
-                        child: ListTile(
-                          leading: Image(
-                              image: AssetImage(
-                                  'images/' + exercise.tag + '.png')),
-                          title: Text(exercise.titulo),
-                          subtitle: Text(exercise.titulo),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                  color: Colors.red,
-                                  icon: Icon(Icons.delete),
-                                  onPressed: () =>
-                                      _deleteExercise(context, exercise.id)),
-                              IconButton(
-                                  color: Colors.blue,
-                                  icon: Icon(Icons.edit),
-                                  onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            AddExercise(exercise: exercise),
-                                      ))),
-                            ],
+                      return Container(
+                        child: Card(
+                         
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
                           ),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  ExerciseDetailsPage(exercise: exercise),
+                          child: ListTile(
+                          
+                            leading: Image(
+                                image: AssetImage(
+                                    'images/' + exercise.tag + '.png')),
+                            contentPadding: EdgeInsets.all(20),
+                            title: Text(
+                              exercise.titulo,
+                              style: GoogleFonts.robotoCondensed(fontSize: 20),
+                              textAlign: TextAlign.center,
+                            ),
+                            subtitle: Text("Autor: " + exercise.autor),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                    color: Colors.red,
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () =>
+                                        _deleteExercise(context, exercise.id)),
+                                IconButton(
+                                    color: Colors.blue,
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) =>
+                                              AddExercise(exercise: exercise),
+                                        ))),
+                              ],
+                            ),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    ExerciseDetailsPage(exercise: exercise),
+                              ),
                             ),
                           ),
+                        ),
+                        decoration: new BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(.5),
+                              blurRadius: 20.0, // soften the shadow
+                              spreadRadius: 0.0, //extend the shadow
+                              offset: Offset(
+                                2.0, // Move to right 10  horizontally
+                                2.0, // Move to bottom 10 Vertically
+                              ),
+                            )
+                          ],
                         ),
                       );
                     });

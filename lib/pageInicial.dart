@@ -5,10 +5,12 @@ import 'package:multilevel_drawer/multilevel_drawer.dart';
 import 'package:webcodetricks/chat/back/chat_screenback.dart';
 import 'package:webcodetricks/chat/front/chat_screenfront.dart';
 import 'package:webcodetricks/screen/home_screen_google.dart';
+import 'package:webcodetricks/tabs/home_tab.dart';
 
 class WelcomeUserWidget extends StatelessWidget {
   GoogleSignIn _googleSignIn;
   FirebaseUser _user;
+  final _pageController = PageController();
 
   WelcomeUserWidget(FirebaseUser user, GoogleSignIn signIn) {
     _user = user;
@@ -24,26 +26,47 @@ class WelcomeUserWidget extends StatelessWidget {
           backgroundColor: Colors.white,
           rippleColor: Colors.white,
           subMenuBackgroundColor: Colors.grey.shade100,
-          divisionColor: Colors.grey,
+          divisionColor: Colors.white10,
           header: Container(
+            decoration: BoxDecoration(
+                image: new DecorationImage(
+                  image: new AssetImage("images/fundo.png"),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.elliptical(100, 30),
+                  bottomRight: Radius.elliptical(100, 30),
+                ),
+                gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [
+                      Color.fromRGBO(71, 74, 81, 0.9),
+                      Color.fromRGBO(99, 101, 107, 0.9)
+                    ])),
             height: size.height * 0.25,
             child: Center(
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ClipOval(
-                    child: Image.network(_user.photoUrl,
-                        width: 100, height: 100, fit: BoxFit.cover)),
+                Container(
+                  width: 100,
+                  child: ClipOval(
+                      child: Image.network(_user.photoUrl,
+                          width: 100, height: 100, fit: BoxFit.cover)),
+                ),
                 SizedBox(
                   height: 10,
-                ),
-                Text("${_user.displayName}")
+                )
               ],
             )),
           ),
           children: [
             MLMenuItem(
-                leading: new Image.asset('images/hashtag.png'),
+                leading: new Icon(
+                  Icons.chat_bubble_outline,
+                  size: 40,
+                ),
                 trailing: Icon(Icons.arrow_right),
                 content: Text(
                   "    Chats",
@@ -69,38 +92,15 @@ class WelcomeUserWidget extends StatelessWidget {
                 ],
                 onClick: () {}),
             MLMenuItem(
-                leading: new Image.asset('images/exercise.png'),
-                trailing: Icon(Icons.arrow_right),
-                content: Text("    Exercícios"),
-                onClick: () {},
-                subMenuItems: [
-                  MLSubmenu(
-                      onClick: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      },
-                      submenuContent: Text("Option 1")),
-                ]),
-            MLMenuItem(
-              leading: Icon(Icons.notifications),
-              content: Text("Usuários"),
-              onClick: () {},
+              leading: new Image.asset("images/exercise.png"),
+              content: Text("    Exercícios"),
+              onClick: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
+              },
             ),
-            MLMenuItem(
-                leading: Icon(Icons.payment),
-                trailing: Icon(Icons.arrow_right),
-                content: Text(
-                  "Payments",
-                ),
-                subMenuItems: [
-                  MLSubmenu(onClick: () {}, submenuContent: Text("Option 1")),
-                  MLSubmenu(onClick: () {}, submenuContent: Text("Option 2")),
-                  MLSubmenu(onClick: () {}, submenuContent: Text("Option 3")),
-                  MLSubmenu(onClick: () {}, submenuContent: Text("Option 4")),
-                ],
-                onClick: () {}),
             MLMenuItem(
               content: FlatButton(
                   shape: RoundedRectangleBorder(
@@ -127,25 +127,11 @@ class WelcomeUserWidget extends StatelessWidget {
             ),
           ],
         ),
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-          title: Text(
-            "<Web Code Tricks/>",
-            style: TextStyle(color: Colors.black),
-          ),
+        body: PageView(
+          controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[HomeTab(text: _user.displayName)],
         ),
-        body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color.fromRGBO(255, 65, 108, 1.0),
-                    Color.fromRGBO(255, 75, 43, 1.0),
-                  ]),
-            ),
-            child: Center()),
       ),
     );
   }

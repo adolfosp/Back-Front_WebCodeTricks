@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:webcodetricks/main.dart';
 import 'package:webcodetricks/screen/addExercise.dart';
 import 'package:webcodetricks/screen/home_page.dart';
-import 'package:webcodetricks/screen/tela_dicasimg.dart';
 
 class HomeScreen extends StatefulWidget {
+    HomeScreen({Key key, this.usuario }) : super(key: key);
+    final String usuario;
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   PageController _pageController;
   int _page = 0;
 
@@ -29,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: Colors.grey,
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(
-            canvasColor: Colors.pinkAccent,
+            canvasColor: Colors.grey[850],
             primaryColor: Colors.white,
             textTheme: Theme.of(context)
                 .textTheme
@@ -54,14 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.picture_in_picture),
+               BottomNavigationBarItem(
+              icon: Icon(Icons.exit_to_app),
               title: Text(
-                "Gallery",
+                "SAIR",
                 overflow: TextOverflow.visible,
                 textAlign: TextAlign.center,
               ),
             ),
+          
           ],
         ),
       ),
@@ -73,8 +78,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 _page = p;
               });
             },
-            children: <Widget>[HomePageExercise(), AddExercise(), PageDicas()]),
+            children: <Widget>[HomePageExercise(), AddExercise(usuarioF:widget.usuario),
+            AlertDialog(
+            content: Text("Deseja realmente sair?"),
+            actions: <Widget>[
+              FlatButton(
+                color: Colors.red,
+                child: Text("Sim"),
+                 onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPageWidget()),
+                        );
+                      },
+              ),
+              FlatButton(
+                color: Colors.red,
+                child: Text("Não"),
+                onPressed: () => Navigator.pop(context, false),
+              )
+            ],
+          )
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            ],
+         
       ),
-    );
+    ));
+    
   }
+
+ 
 }
+
+
