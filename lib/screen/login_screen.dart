@@ -119,6 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   margin: EdgeInsets.all(12),
                                   child: Column(children: <Widget>[
                                     InputField(
+                                    
                                       icon: Icons.person_outline,
                                       hint: "Usuário",
                                       obscure: false,

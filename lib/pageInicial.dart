@@ -8,13 +8,13 @@ import 'package:webcodetricks/screen/home_screen_google.dart';
 import 'package:webcodetricks/tabs/home_tab.dart';
 
 class WelcomeUserWidget extends StatelessWidget {
-  GoogleSignIn _googleSignIn;
+  GoogleSignIn googleSignIn;
   FirebaseUser _user;
   final _pageController = PageController();
 
   WelcomeUserWidget(FirebaseUser user, GoogleSignIn signIn) {
     _user = user;
-    _googleSignIn = signIn;
+    googleSignIn = signIn;
   }
 
   @override
@@ -52,7 +52,7 @@ class WelcomeUserWidget extends StatelessWidget {
                 Container(
                   width: 100,
                   child: ClipOval(
-                      child: Image.network(_user.photoUrl,
+                      child: Image.network(_user.photoUrl != null ? _user.photoUrl : Image.asset("images/user.png"),
                           width: 100, height: 100, fit: BoxFit.cover)),
                 ),
                 SizedBox(
@@ -107,7 +107,7 @@ class WelcomeUserWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   onPressed: () {
-                    _googleSignIn.signOut();
+                    googleSignIn.signOut();
                     Navigator.popAndPushNamed(context, '/homepage');
                   },
                   color: Colors.redAccent,

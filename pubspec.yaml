@@ -65,6 +65,8 @@ flutter:
     - images/google.png
     - images/fundo.png
     - images/autor.png
+    - images/user.png
+
 
 flutter_icons:
   android: "launcher_icon"
