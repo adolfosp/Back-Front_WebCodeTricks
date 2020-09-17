@@ -93,7 +93,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
+        
         appBar: AppBar(
+                  backgroundColor: Colors.grey[700],
+
           title: Text(
             _currentUser != null ? 'Olá, ${_currentUser.displayName}' : 'Chat app'
           ),

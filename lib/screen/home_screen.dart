@@ -78,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _page = p;
               });
             },
-            children: <Widget>[HomePageExercise(), AddExercise(usuarioF:widget.usuario),
+            children: <Widget>[HomePageExercise(usuarioF:widget.usuario), AddExercise(usuarioF:widget.usuario),
             AlertDialog(
             content: Text("Deseja realmente sair?"),
             actions: <Widget>[

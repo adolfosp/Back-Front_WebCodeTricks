@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -7,13 +8,13 @@ import 'package:webcodetricks/model/exercise.dart';
 import 'package:webcodetricks/model/firestore_service.dart';
 import 'package:webcodetricks/screen/home_screen.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:webcodetricks/screen/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class AddExercise extends StatefulWidget {
   final Exercise exercise;
+  String usuarioF;
 
   AddExercise({Key key, this.exercise, this.usuarioF}) : super(key: key);
-  String usuarioF;
   @override
   _AddExerciseState createState() => _AddExerciseState();
 }
@@ -52,26 +53,35 @@ class _AddExerciseState extends State<AddExercise> {
   TextEditingController _tituloController;
   TextEditingController _perguntaController;
   TextEditingController _respostaController;
-  TextEditingController _autorController ;
- 
-
 
   FocusNode _perguntaNode;
   FocusNode _respostaNode;
-  FocusNode _autorNode;
   bool _loading;
   double _progressValue;
   get isEditExercise => widget.exercise != null;
 
-  List _cities = ["Back-End", "Front-End", "JavaScript", "Node", "CSS"];
+  Future<Map> _getTags() async {
+    http.Response response;
+
+    response =
+        await http.get("https://5f615f5207c1770016c51f55.mockapi.io/tags");
+
+    return json.decode(response.body);
+  }
+
+  List _tags = ["Back-End", "Front-End", "JavaScript", "Node", "CSS"];
   List<DropdownMenuItem<String>> _dropDownMenuItems;
-  String _currentCity;
+  String _currenttag;
   @override
   void initState() {
     super.initState();
 
+    _getTags().then((map) {
+      print(map);
+    });
+
     _dropDownMenuItems = getDropDownMenuItems();
-    _currentCity =
+    _currenttag =
         isEditExercise ? widget.exercise.tag : _dropDownMenuItems[0].value;
     _loading = false;
     _progressValue = 0.0;
@@ -82,25 +92,23 @@ class _AddExerciseState extends State<AddExercise> {
         text: isEditExercise ? widget.exercise.pergunta : '');
     _respostaController = TextEditingController(
         text: isEditExercise ? widget.exercise.resposta : '');
-    _autorController = TextEditingController(
-        text: isEditExercise ? widget.usuarioF : widget.usuarioF);
+
     _perguntaNode = FocusNode();
     _respostaNode = FocusNode();
-    _autorNode = FocusNode();
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
     List<DropdownMenuItem<String>> items = new List();
-    for (String city in _cities) {
-      items.add(new DropdownMenuItem(value: city, child: new Text(city)));
+    for (String tag in _tags) {
+      items.add(new DropdownMenuItem(value: tag, child: new Text(tag)));
     }
     return items;
   }
 
-  void changedDropDownItem(String selectedCity) {
+  void changedDropDownItem(String selectedtag) {
     setState(() {
-      _currentCity = selectedCity;
-      print(_currentCity);
+      _currenttag = selectedtag;
+      print(_currenttag);
     });
   }
 
@@ -131,8 +139,8 @@ class _AddExerciseState extends State<AddExercise> {
           IconButton(
             icon: Icon(Icons.arrow_back),
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => HomeScreen(usuario: widget.usuarioF)));
             },
           ),
         ],
@@ -190,9 +198,6 @@ class _AddExerciseState extends State<AddExercise> {
               TextFormField(
                 maxLines: 5,
                 textInputAction: TextInputAction.next,
-                onEditingComplete: () {
-                  FocusScope.of(context).requestFocus(_autorNode);
-                },
                 focusNode: _respostaNode,
                 controller: _respostaController,
                 validator: (value3) {
@@ -208,26 +213,6 @@ class _AddExerciseState extends State<AddExercise> {
               ),
               const SizedBox(
                 height: 10.0,
-              ),
-              TextFormField(
-                enabled: false,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () {
-                  FocusScope.of(context).requestFocus();
-                },
-                
-                focusNode: _autorNode,
-                controller: _autorController,
-                validator: (value4) {
-                  if (value4 == null || value4.isEmpty) {
-                    return "Autor obrigatório";
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  labelText: "Autor da pergunta",
-                  border: OutlineInputBorder(),
-                ),
               ),
               const SizedBox(
                 height: 10.0,
@@ -248,7 +233,7 @@ class _AddExerciseState extends State<AddExercise> {
                     width: 220.0,
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: DropdownButton(
-                      value: _currentCity,
+                      value: _currenttag,
                       items: _dropDownMenuItems,
                       onChanged: changedDropDownItem,
                     ),
@@ -389,10 +374,10 @@ class _AddExerciseState extends State<AddExercise> {
                                         titulo: _tituloController.text,
                                         pergunta: _perguntaController.text,
                                         resposta: _respostaController.text,
-                                        autor: _autorController.text,
+                                        autor: widget.usuarioF,
                                         url: myUrl,
                                         id: widget.exercise.id,
-                                        tag: _currentCity);
+                                        tag: _currenttag);
 
                                     await FirestoreService()
                                         .updateExercise(exercise);
@@ -402,10 +387,10 @@ class _AddExerciseState extends State<AddExercise> {
                                         titulo: _tituloController.text,
                                         pergunta: _perguntaController.text,
                                         resposta: _respostaController.text,
-                                        autor: _autorController.text,
+                                        autor: widget.usuarioF,
                                         url: myUrl,
                                         id: widget.exercise.id,
-                                        tag: _currentCity);
+                                        tag: _currenttag);
 
                                     await FirestoreService()
                                         .updateExercise(exercise);
@@ -422,16 +407,17 @@ class _AddExerciseState extends State<AddExercise> {
                                       titulo: _tituloController.text,
                                       pergunta: _perguntaController.text,
                                       resposta: _respostaController.text,
-                                      autor: _autorController.text,
+                                      autor: widget.usuarioF,
                                       url: myUrl,
-                                      tag: _currentCity);
+                                      tag: _currenttag);
                                   await FirestoreService()
                                       .addExercise(exercise);
                                 }
 
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
+                                        builder: (context) => HomeScreen(
+                                            usuario: widget.usuarioF)));
                               } catch (e) {
                                 print(e);
                               }

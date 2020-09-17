@@ -7,13 +7,13 @@ import 'package:webcodetricks/screen/addExercise.dart';
 import 'package:webcodetricks/screen/exercise_details.dart';
 
 var resultado = "";
+var autor = "";
+
 TextEditingController _textController = TextEditingController();
 
 class HomePageExercise extends StatefulWidget {
-  HomePageExercise({Key key,}) : super(key: key);
-  
-
-
+  HomePageExercise({Key key, this.usuarioF}) : super(key: key);
+  String usuarioF;
 
   @override
   _HomePageExerciseState createState() => _HomePageExerciseState();
@@ -22,7 +22,9 @@ class HomePageExercise extends StatefulWidget {
 @override
 void initState() {
   _textController.text = resultado;
+  
 }
+
 
 class _HomePageExerciseState extends State<HomePageExercise> {
   @override
@@ -45,9 +47,10 @@ class _HomePageExerciseState extends State<HomePageExercise> {
                     ),
                     border: InputBorder.none),
                 onChanged: (value) {
-                  FirestoreService().getExerciseWhere(value);
+                  FirestoreService().getExerciseWhere(value,widget.usuarioF);
                   setState(() {
                     resultado = value;
+                    widget.usuarioF;
                   });
                 }),
           ),
@@ -55,7 +58,7 @@ class _HomePageExerciseState extends State<HomePageExercise> {
         ),
         Expanded(
           child: StreamBuilder(
-              stream: FirestoreService().getExerciseWhere(resultado),
+              stream:FirestoreService().getExerciseWhere(resultado,widget.usuarioF),
               builder: (BuildContext context,
                   AsyncSnapshot<List<Exercise>> snapshot) {
                 if (snapshot.hasError || !snapshot.hasData)
@@ -82,7 +85,7 @@ class _HomePageExerciseState extends State<HomePageExercise> {
                               style: GoogleFonts.robotoCondensed(fontSize: 20),
                               textAlign: TextAlign.center,
                             ),
-                            subtitle: Text("Autor: " + exercise.autor),
+                            
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -98,7 +101,7 @@ class _HomePageExerciseState extends State<HomePageExercise> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (_) =>
-                                              AddExercise(exercise: exercise),
+                                              AddExercise(exercise: exercise, usuarioF:widget.usuarioF),
                                         ))),
                               ],
                             ),

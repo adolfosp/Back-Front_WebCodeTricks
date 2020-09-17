@@ -22,12 +22,13 @@ class FirestoreService {
         );
   }
 
-  Stream<List<Exercise>> getExerciseWhere(String resultado) {
+  Stream<List<Exercise>> getExerciseWhere(String resultado, String usuario) {
     print(resultado);
     return _db
         .collection('exercise')
         .where('tag', isGreaterThanOrEqualTo: resultado)
         .where('tag', isLessThan: resultado + 'z')
+        .where('autor', isEqualTo: usuario)
         .snapshots()
         .map(
           (snapshot) => snapshot.documents

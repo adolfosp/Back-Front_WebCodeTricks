@@ -25,7 +25,6 @@ class _ChatScreenState extends State<ChatScreenFront> {
     FirebaseAuth.instance.onAuthStateChanged.listen((user) {
       setState(() {
         _currentUser = user;
-
       });
     });
   }
@@ -71,8 +70,7 @@ class _ChatScreenState extends State<ChatScreenFront> {
     if (imgFile != null) {
       StorageUploadTask task = FirebaseStorage.instance
           .ref()
-          .child(user.uid + DateTime.now().millisecondsSinceEpoch.toString()
-      )
+          .child(user.uid + DateTime.now().millisecondsSinceEpoch.toString())
           .putFile(imgFile);
       setState(() {
         _isLoading = true;
@@ -94,30 +92,36 @@ class _ChatScreenState extends State<ChatScreenFront> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
-          title: Text(
-            _currentUser != null ? 'Olá, ${_currentUser.displayName}' : 'Chat app'
-          ),
+          backgroundColor: Colors.grey[700],
+          title: Text(_currentUser != null
+              ? 'Olá, ${_currentUser.displayName}'
+              : 'Chat app'),
           centerTitle: true,
           elevation: 0,
           actions: <Widget>[
-            _currentUser != null ? IconButton(icon: Icon(Icons.exit_to_app),
-              onPressed: (){
-                FirebaseAuth.instance.signOut();
-                googleSignIn.signOut();
-                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                  content: Text(" xauuu brigado"),
-                  backgroundColor: Colors.red,
-                ));
-              },
-            ): Container()
+            _currentUser != null
+                ? IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                      googleSignIn.signOut();
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(" xauuu brigado"),
+                        backgroundColor: Colors.red,
+                      ));
+                    },
+                  )
+                : Container()
           ],
         ),
-
         body: Column(
           children: <Widget>[
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance.collection('chatfront').orderBy('time').snapshots(),
+                  stream: Firestore.instance
+                      .collection('chatfront')
+                      .orderBy('time')
+                      .snapshots(),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.none:
@@ -128,13 +132,15 @@ class _ChatScreenState extends State<ChatScreenFront> {
                       default:
                         List<DocumentSnapshot> documents =
                             snapshot.data.documents.reversed.toList();
-                        return ListView.builder(itemCount:documents.length,
+                        return ListView.builder(
+                            itemCount: documents.length,
                             reverse: true,
-                            itemBuilder:(context,index){
-                              return ChatMessage(documents[index].data,documents[index].data['uid'] == _currentUser?.uid);
-
-                        });
-
+                            itemBuilder: (context, index) {
+                              return ChatMessage(
+                                  documents[index].data,
+                                  documents[index].data['uid'] ==
+                                      _currentUser?.uid);
+                            });
                     }
                   }),
             ),
