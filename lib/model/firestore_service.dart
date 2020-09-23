@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:webcodetricks/model/exercise.dart';
+import 'package:webcodetricks/model/image.dart';
 
 class FirestoreService {
   static final FirestoreService _firestoreService =
@@ -39,6 +40,20 @@ class FirestoreService {
         );
   }
 
+  Stream<List<Images>> getImageWhere(String usuario) {
+    return _db
+        .collection('images')
+        .where('usuario', isEqualTo: usuario)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.documents
+              .map(
+                (doc) => Images.fromMap(doc.data, doc.documentID),
+              )
+              .toList(),
+        );
+  }
+
   Future<void> addExercise(Exercise exercise) {
     return _db.collection('exercise').add(exercise.toMap());
   }
@@ -47,10 +62,18 @@ class FirestoreService {
     return _db.collection('exercise').document(id).delete();
   }
 
+  Future<void> deleteNodeImage(String id) {
+    return _db.collection('images').document(id).delete();
+  }
+
   Future<void> updateExercise(Exercise exercise) {
     return _db
         .collection('exercise')
         .document(exercise.id)
         .updateData(exercise.toMap());
+  }
+
+  Future<void> addImage(Images images) {
+    return _db.collection('images').add(images.toMap());
   }
 }

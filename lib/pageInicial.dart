@@ -52,8 +52,13 @@ class WelcomeUserWidget extends StatelessWidget {
                 Container(
                   width: 100,
                   child: ClipOval(
-                      child: Image.network(_user.photoUrl != null ? _user.photoUrl : Image.asset("images/user.png"),
-                          width: 100, height: 100, fit: BoxFit.cover)),
+                      child: Image.network(
+                          _user.photoUrl == null
+                              ? Image.asset("images/user.png")
+                              : _user.photoUrl,
+                          width: 100,
+                          height: 100,
+                          fit: BoxFit.cover)),
                 ),
                 SizedBox(
                   height: 10,
